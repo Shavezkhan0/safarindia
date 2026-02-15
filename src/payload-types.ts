@@ -69,6 +69,10 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    destinations: Destination;
+    packages: Package;
+    enquiries: Enquiry;
+    banners: Banner;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,6 +82,10 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    destinations: DestinationsSelect<false> | DestinationsSelect<true>;
+    packages: PackagesSelect<false> | PackagesSelect<true>;
+    enquiries: EnquiriesSelect<false> | EnquiriesSelect<true>;
+    banners: BannersSelect<false> | BannersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -87,8 +95,12 @@ export interface Config {
     defaultIDType: string;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
+  globalsSelect: {
+    'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+  };
   locale: null;
   user: User;
   jobs: {
@@ -120,6 +132,8 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
+  name: string;
+  role: 'superadmin' | 'admin';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -145,7 +159,9 @@ export interface User {
  */
 export interface Media {
   id: string;
+  cloudinaryPublicId?: string | null;
   alt: string;
+  caption?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -157,6 +173,214 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "destinations".
+ */
+export interface Destination {
+  id: string;
+  name: string;
+  /**
+   * Auto-generated from name. Do not edit.
+   */
+  slug?: string | null;
+  state:
+    | 'andhra-pradesh'
+    | 'arunachal-pradesh'
+    | 'assam'
+    | 'bihar'
+    | 'chhattisgarh'
+    | 'goa'
+    | 'gujarat'
+    | 'haryana'
+    | 'himachal-pradesh'
+    | 'jharkhand'
+    | 'karnataka'
+    | 'kerala'
+    | 'madhya-pradesh'
+    | 'maharashtra'
+    | 'manipur'
+    | 'meghalaya'
+    | 'mizoram'
+    | 'nagaland'
+    | 'odisha'
+    | 'punjab'
+    | 'rajasthan'
+    | 'sikkim'
+    | 'tamil-nadu'
+    | 'telangana'
+    | 'tripura'
+    | 'uttar-pradesh'
+    | 'uttarakhand'
+    | 'west-bengal'
+    | 'delhi'
+    | 'jammu-kashmir'
+    | 'ladakh'
+    | 'chandigarh'
+    | 'puducherry'
+    | 'andaman-nicobar'
+    | 'dadra-nagar-haveli'
+    | 'lakshadweep';
+  description?: string | null;
+  image: string | Media;
+  category: 'hill-station' | 'beach' | 'heritage-culture' | 'adventure' | 'wildlife' | 'spiritual-pilgrimage';
+  isFeatured?: boolean | null;
+  isActive?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "packages".
+ */
+export interface Package {
+  id: string;
+  title: string;
+  /**
+   * Auto-generated from title. Do not edit.
+   */
+  slug?: string | null;
+  /**
+   * Max 160 characters. Shown on package cards.
+   */
+  shortDescription?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  destination: string | Destination;
+  category: 'hill-station' | 'beach' | 'heritage' | 'adventure' | 'wildlife' | 'pilgrimage' | 'honeymoon';
+  duration: {
+    days: number;
+    nights: number;
+  };
+  price: {
+    original: number;
+    discounted?: number | null;
+    currency?: string | null;
+  };
+  images?:
+    | {
+        image: string | Media;
+        isMain?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional promotional video
+   */
+  video?: (string | null) | Media;
+  itinerary?:
+    | {
+        day?: number | null;
+        title: string;
+        description?: string | null;
+        activities?:
+          | {
+              activity?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  includes?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  excludes?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  highlights?:
+    | {
+        item: string;
+        id?: string | null;
+      }[]
+    | null;
+  groupSize?: {
+    min?: number | null;
+    max?: number | null;
+  };
+  startDates?:
+    | {
+        date: string;
+        id?: string | null;
+      }[]
+    | null;
+  isFeatured?: boolean | null;
+  isActive?: boolean | null;
+  tags?:
+    | {
+        tag?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * All booking enquiries submitted by website visitors
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries".
+ */
+export interface Enquiry {
+  id: string;
+  packageRef?: (string | null) | Package;
+  /**
+   * Auto-filled when enquiry is saved
+   */
+  packageTitle?: string | null;
+  packageSlug?: string | null;
+  mobileNumber: string;
+  status: 'new' | 'contacted' | 'converted' | 'closed';
+  /**
+   * Internal notes - not visible to customer
+   */
+  adminNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners".
+ */
+export interface Banner {
+  id: string;
+  title: string;
+  subtitle?: string | null;
+  type: 'image' | 'video';
+  media: string | Media;
+  ctaText?: string | null;
+  ctaLink?: string | null;
+  isActive?: boolean | null;
+  /**
+   * Lower number shows first (0, 1, 2...)
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -189,6 +413,22 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'destinations';
+        value: string | Destination;
+      } | null)
+    | ({
+        relationTo: 'packages';
+        value: string | Package;
+      } | null)
+    | ({
+        relationTo: 'enquiries';
+        value: string | Enquiry;
+      } | null)
+    | ({
+        relationTo: 'banners';
+        value: string | Banner;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -237,6 +477,8 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -259,7 +501,9 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  cloudinaryPublicId?: T;
   alt?: T;
+  caption?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -271,6 +515,145 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "destinations_select".
+ */
+export interface DestinationsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  state?: T;
+  description?: T;
+  image?: T;
+  category?: T;
+  isFeatured?: T;
+  isActive?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "packages_select".
+ */
+export interface PackagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  shortDescription?: T;
+  description?: T;
+  destination?: T;
+  category?: T;
+  duration?:
+    | T
+    | {
+        days?: T;
+        nights?: T;
+      };
+  price?:
+    | T
+    | {
+        original?: T;
+        discounted?: T;
+        currency?: T;
+      };
+  images?:
+    | T
+    | {
+        image?: T;
+        isMain?: T;
+        id?: T;
+      };
+  video?: T;
+  itinerary?:
+    | T
+    | {
+        day?: T;
+        title?: T;
+        description?: T;
+        activities?:
+          | T
+          | {
+              activity?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  includes?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  excludes?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  highlights?:
+    | T
+    | {
+        item?: T;
+        id?: T;
+      };
+  groupSize?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+      };
+  startDates?:
+    | T
+    | {
+        date?: T;
+        id?: T;
+      };
+  isFeatured?: T;
+  isActive?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enquiries_select".
+ */
+export interface EnquiriesSelect<T extends boolean = true> {
+  packageRef?: T;
+  packageTitle?: T;
+  packageSlug?: T;
+  mobileNumber?: T;
+  status?: T;
+  adminNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "banners_select".
+ */
+export interface BannersSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  type?: T;
+  media?: T;
+  ctaText?: T;
+  ctaLink?: T;
+  isActive?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -311,6 +694,65 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: string;
+  siteName?: string | null;
+  tagline?: string | null;
+  phone: string;
+  email?: string | null;
+  /**
+   * Example: 9876543210
+   */
+  whatsappNumber?: string | null;
+  address?: string | null;
+  logo?: (string | null) | Media;
+  socialLinks?: {
+    facebook?: string | null;
+    instagram?: string | null;
+    youtube?: string | null;
+    twitter?: string | null;
+  };
+  seoDefaults?: {
+    defaultTitle?: string | null;
+    defaultDescription?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  siteName?: T;
+  tagline?: T;
+  phone?: T;
+  email?: T;
+  whatsappNumber?: T;
+  address?: T;
+  logo?: T;
+  socialLinks?:
+    | T
+    | {
+        facebook?: T;
+        instagram?: T;
+        youtube?: T;
+        twitter?: T;
+      };
+  seoDefaults?:
+    | T
+    | {
+        defaultTitle?: T;
+        defaultDescription?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

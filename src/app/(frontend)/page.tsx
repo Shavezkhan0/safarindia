@@ -1,59 +1,39 @@
-import { headers as getHeaders } from 'next/headers.js'
-import Image from 'next/image'
-import { getPayload } from 'payload'
-import React from 'react'
-import { fileURLToPath } from 'url'
+import { Metadata } from 'next'
+import {
+  getActiveBanners,
+  getFeaturedPackages,
+  getDestinations,
+  getSiteSettings,
+} from '@/lib/payload-api'
+import HeroBanner from '@/components/home/HeroBanner'
+import StatsCounter from '@/components/home/StatsCounter'
+import CategoryFilter from '@/components/home/CategoryFilter'
+import FeaturedPackages from '@/components/home/FeaturedPackages'
+import DestinationGrid from '@/components/home/DestinationGrid'
+import WhyChooseUs from '@/components/home/WhyChooseUs'
+import Testimonials from '@/components/home/Testimonials'
 
-import config from '@/payload.config'
-import './styles.css'
+export const metadata: Metadata = {
+  title: 'SafariIndia - Your Gateway to Incredible India',
+  description: 'Discover the magic of India with SafariIndia. Explore curated tour packages, beautiful destinations, and unforgettable adventures across India.',
+}
 
 export default async function HomePage() {
-  const headers = await getHeaders()
-  const payloadConfig = await config
-  const payload = await getPayload({ config: payloadConfig })
-  const { user } = await payload.auth({ headers })
-
-  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  const [banners, featuredPackages, destinations] = await Promise.all([
+    getActiveBanners(),
+    getFeaturedPackages(),
+    getDestinations({ featured: true }),
+  ])
 
   return (
-    <div className="home">
-      <div className="content">
-        <picture>
-          <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
-          <Image
-            alt="Payload Logo"
-            height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"
-            width={65}
-          />
-        </picture>
-        {!user && <h1>Welcome to your new project.</h1>}
-        {user && <h1>Welcome back, {user.email}</h1>}
-        <div className="links">
-          <a
-            className="admin"
-            href={payloadConfig.routes.admin}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Go to admin panel
-          </a>
-          <a
-            className="docs"
-            href="https://payloadcms.com/docs"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Documentation
-          </a>
-        </div>
-      </div>
-      <div className="footer">
-        <p>Update this page by editing</p>
-        <a className="codeLink" href={fileURL}>
-          <code>app/(frontend)/page.tsx</code>
-        </a>
-      </div>
-    </div>
+    <>
+      <HeroBanner banners={banners as any} />
+      <StatsCounter />
+      <CategoryFilter />
+      <FeaturedPackages packages={featuredPackages as any} />
+      <DestinationGrid destinations={destinations as any} />
+      <WhyChooseUs />
+      <Testimonials />
+    </>
   )
 }

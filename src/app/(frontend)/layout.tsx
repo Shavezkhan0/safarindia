@@ -1,9 +1,12 @@
 import React from 'react'
 import './styles.css'
+import { BookingProvider } from '@/components/shared/BookingContext'
+import Navbar from '@/components/layout/Navbar'
+import Footer from '@/components/layout/Footer'
 
 export const metadata = {
-  description: 'A blank template using Payload in a Next.js app.',
-  title: 'Payload Blank Template',
+  description: 'SafariIndia - Your Gateway to Incredible India',
+  title: 'SafariIndia',
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
@@ -12,7 +15,15 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <main>{children}</main>
+        <BookingProvider>
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-1 pt-16 md:pt-20">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </BookingProvider>
       </body>
     </html>
   )
