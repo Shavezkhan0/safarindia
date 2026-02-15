@@ -13,9 +13,12 @@ import DestinationGrid from '@/components/home/DestinationGrid'
 import WhyChooseUs from '@/components/home/WhyChooseUs'
 import Testimonials from '@/components/home/Testimonials'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'SafariIndia - Your Gateway to Incredible India',
-  description: 'Discover the magic of India with SafariIndia. Explore curated tour packages, beautiful destinations, and unforgettable adventures across India.',
+  description:
+    'Discover the magic of India with SafariIndia. Explore curated tour packages, beautiful destinations, and unforgettable adventures across India.',
 }
 
 export default async function HomePage() {

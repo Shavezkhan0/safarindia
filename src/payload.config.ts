@@ -41,10 +41,11 @@ export default buildConfig({
           email: 'admin@safarindia.com',
           password: 'SafariIndia@2024!',
           name: 'Super Admin',
+          role: 'superadmin',
         },
-        draft: true,
+        draft: false,
       })
-      console.log('✅ Default admin user created')
+      console.log('✅ Default admin user created: admin@safarindia.com / SafariIndia@2024!')
     }
   },
   collections: [Users, Media, Destinations, Packages, Enquiries, Banners],

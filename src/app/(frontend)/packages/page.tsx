@@ -4,6 +4,8 @@ import { getPackages, getDestinations } from '@/lib/payload-api'
 import PackageFilters from '@/components/packages/PackageFilters'
 import PackageGrid from '@/components/packages/PackageGrid'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   searchParams: Promise<{
     category?: string
@@ -20,28 +22,29 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const params = await searchParams
   const category = params.category
   const title = category ? ` ${category.replace('-', ' ')} Packages` : 'Tour Packages'
-  
+
   return {
     title: `Explore${title} - SafariIndia`,
-    description: 'Browse our curated collection of tour packages across India. Find the perfect trip for your next adventure.',
+    description:
+      'Browse our curated collection of tour packages across India. Find the perfect trip for your next adventure.',
   }
 }
 
 export default async function PackagesPage({ searchParams }: PageProps) {
   const params = await searchParams
-  
+
   const page = parseInt(params.page || '1')
   const category = params.category?.split(',')[0]
   const destination = params.destination
   const search = params.search
   const minPrice = params.minPrice ? parseInt(params.minPrice) : undefined
   const maxPrice = params.maxPrice ? parseInt(params.maxPrice) : undefined
-  
+
   const sortMap: Record<string, string> = {
     'price-low': 'price.original',
     'price-high': '-price.original',
-    'newest': '-createdAt',
-    'featured': '-isFeatured',
+    newest: '-createdAt',
+    featured: '-isFeatured',
   }
   const sort = params.sort ? sortMap[params.sort] : undefined
 
@@ -63,11 +66,16 @@ export default async function PackagesPage({ searchParams }: PageProps) {
       <div className="bg-gradient-to-r from-primary to-accent py-16">
         <div className="max-w-7xl mx-auto px-4">
           <nav className="text-white/80 text-sm mb-4">
-            <Link href="/" className="hover:text-white">Home</Link>
+            <Link href="/" className="hover:text-white">
+              Home
+            </Link>
             <span className="mx-2">/</span>
             <span className="text-white">Packages</span>
           </nav>
-          <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'var(--font-playfair)' }}>
+          <h1
+            className="text-4xl md:text-5xl font-bold text-white"
+            style={{ fontFamily: 'var(--font-playfair)' }}
+          >
             Explore Our Tour Packages
           </h1>
           <p className="text-white/80 mt-3 text-lg">
@@ -79,10 +87,10 @@ export default async function PackagesPage({ searchParams }: PageProps) {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           <PackageFilters destinations={destinations as any} />
-          
+
           <div className="flex-1">
             <PackageGrid packages={packagesResult.docs as any} />
-            
+
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-2 mt-12">
                 {page > 1 && (
@@ -93,7 +101,7 @@ export default async function PackagesPage({ searchParams }: PageProps) {
                     Previous
                   </Link>
                 )}
-                
+
                 <div className="flex gap-1">
                   {[...Array(Math.min(5, totalPages))].map((_, i) => {
                     const pageNum = i + 1

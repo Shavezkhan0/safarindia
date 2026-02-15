@@ -6,6 +6,8 @@ import { MapPin, Cloud, Calendar } from 'lucide-react'
 import { getDestinationBySlug, getPackages } from '@/lib/payload-api'
 import PackageGrid from '@/components/packages/PackageGrid'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{ slug: string }>
 }
@@ -13,14 +15,16 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const destination = await getDestinationBySlug(slug)
-  
+
   if (!destination) {
     return { title: 'Destination Not Found - SafariIndia' }
   }
 
   return {
     title: `${destination.name} - SafariIndia`,
-    description: destination.description || `Explore tour packages in ${destination.name}. Discover the best of ${destination.name} with SafariIndia.`,
+    description:
+      destination.description ||
+      `Explore tour packages in ${destination.name}. Discover the best of ${destination.name} with SafariIndia.`,
   }
 }
 
@@ -36,11 +40,16 @@ export default async function DestinationDetailPage({ params }: PageProps) {
 
   const getBestSeason = (category?: string) => {
     switch (category) {
-      case 'hill-station': return 'March - June, October - December'
-      case 'beach': return 'October - March'
-      case 'heritage': return 'October - March'
-      case 'adventure': return 'March - June, September - November'
-      default: return 'October - March'
+      case 'hill-station':
+        return 'March - June, October - December'
+      case 'beach':
+        return 'October - March'
+      case 'heritage':
+        return 'October - March'
+      case 'adventure':
+        return 'March - June, September - November'
+      default:
+        return 'October - March'
     }
   }
 
@@ -61,17 +70,24 @@ export default async function DestinationDetailPage({ params }: PageProps) {
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-        
+
         <div className="absolute bottom-0 left-0 right-0 p-8">
           <div className="max-w-7xl mx-auto">
             <nav className="text-white/80 text-sm mb-4">
-              <Link href="/" className="hover:text-white">Home</Link>
+              <Link href="/" className="hover:text-white">
+                Home
+              </Link>
               <span className="mx-2">/</span>
-              <Link href="/destinations" className="hover:text-white">Destinations</Link>
+              <Link href="/destinations" className="hover:text-white">
+                Destinations
+              </Link>
               <span className="mx-2">/</span>
               <span className="text-white">{destination.name}</span>
             </nav>
-            <h1 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: 'var(--font-playfair)' }}>
+            <h1
+              className="text-4xl md:text-5xl font-bold text-white"
+              style={{ fontFamily: 'var(--font-playfair)' }}
+            >
               {destination.name}
             </h1>
             {destination.state && (
@@ -87,11 +103,15 @@ export default async function DestinationDetailPage({ params }: PageProps) {
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           <div className="lg:col-span-2">
-            <h2 className="text-2xl font-bold text-secondary mb-4" style={{ fontFamily: 'var(--font-playfair)' }}>
+            <h2
+              className="text-2xl font-bold text-secondary mb-4"
+              style={{ fontFamily: 'var(--font-playfair)' }}
+            >
               About {destination.name}
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              {destination.description || `${destination.name} is a beautiful destination in India offering unique experiences for travelers. From stunning natural beauty to rich cultural heritage, this destination has something for everyone.`}
+              {destination.description ||
+                `${destination.name} is a beautiful destination in India offering unique experiences for travelers. From stunning natural beauty to rich cultural heritage, this destination has something for everyone.`}
             </p>
           </div>
 
@@ -112,7 +132,9 @@ export default async function DestinationDetailPage({ params }: PageProps) {
                   <Cloud className="w-5 h-5 text-primary" />
                   <div>
                     <p className="text-sm text-gray-500">Type</p>
-                    <p className="font-medium capitalize">{destination.category.replace('-', ' ')}</p>
+                    <p className="font-medium capitalize">
+                      {destination.category.replace('-', ' ')}
+                    </p>
                   </div>
                 </div>
               )}
@@ -128,7 +150,10 @@ export default async function DestinationDetailPage({ params }: PageProps) {
         </div>
 
         <section>
-          <h2 className="text-3xl font-bold text-secondary mb-8" style={{ fontFamily: 'var(--font-playfair)' }}>
+          <h2
+            className="text-3xl font-bold text-secondary mb-8"
+            style={{ fontFamily: 'var(--font-playfair)' }}
+          >
             Packages in {destination.name}
           </h2>
           <PackageGrid packages={packages.docs as any} />
